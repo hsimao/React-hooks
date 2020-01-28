@@ -14,8 +14,7 @@ import * as serviceWorker from "./serviceWorker";
 const Root = () => {
   const initialState = useContext(Context);
   const [state, dispatch] = useReducer(reducer, initialState);
-  console.log("Root");
-  console.log({ state });
+
   return (
     <Router>
       <Context.Provider value={{ state, dispatch }}>
