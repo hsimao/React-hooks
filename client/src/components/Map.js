@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import ReactMapGL, { NavigationControl, Marker } from "react-map-gl";
 import { withStyles } from "@material-ui/core/styles";
 import PinIcon from "./PinIcon";
+import Blog from "./Blog";
 import Context from "../context";
 // import Button from "@material-ui/core/Button";
 // import Typography from "@material-ui/core/Typography";
@@ -89,6 +90,9 @@ const Map = ({ classes }) => {
           </Marker>
         )}
       </ReactMapGL>
+
+      {/* Blog 區塊, 用來新增 Pin 內容 */}
+      <Blog />
     </div>
   );
 };
