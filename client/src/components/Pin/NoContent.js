@@ -5,13 +5,13 @@ import Typography from "@material-ui/core/Typography";
 
 const NoContent = ({ classes }) => (
   <div className={classes.root}>
-    <ExploreIcon className={classes.icon} />
+    <ExploreIcon className={classes.icon} color="primary" />
     <Typography
       noWrap
       component="h2"
       variant="h6"
       align="center"
-      color="textPrimary"
+      color="textSecondary"
       gutterBottom
     >
       點擊地圖新增標籤
