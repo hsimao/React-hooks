@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import ReactMapGL, { NavigationControl, Marker } from "react-map-gl";
 import { withStyles } from "@material-ui/core/styles";
 import PinIcon from "./PinIcon";
+import Context from "../context";
 // import Button from "@material-ui/core/Button";
 // import Typography from "@material-ui/core/Typography";
 // import DeleteIcon from "@material-ui/icons/DeleteTwoTone";
@@ -13,6 +14,7 @@ const INITIAL_VIEWPORT = {
 };
 
 const Map = ({ classes }) => {
+  const { state, dispatch } = useContext(Context);
   const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
   const [userPosition, setUserPosition] = useState(null);
 
@@ -32,6 +34,19 @@ const Map = ({ classes }) => {
     }
   };
 
+  // 當用左鍵點擊 Map 時, 創建草稿 Marker, 並將座標儲存進去
+  const handleMapClick = ({ lngLat, leftButton }) => {
+    if (!leftButton) return;
+    if (!state.draft) {
+      dispatch({ type: "CREATE_DRAFT" });
+    }
+    const [longitude, latitude] = lngLat;
+    dispatch({
+      type: "UPDATE_DRAFT_LOCATION",
+      payload: { longitude, latitude }
+    });
+  };
+
   return (
     <div className={classes.root}>
       <ReactMapGL
@@ -39,6 +54,7 @@ const Map = ({ classes }) => {
         height="calc(100vh - 64px)"
         mapStyle="mapbox://styles/hsimao/ck360c7fw13wa1cmbflkff42r"
         onViewportChange={newViewport => setViewport(newViewport)}
+        onClick={handleMapClick}
         {...viewport}
         mapboxApiAccessToken="pk.eyJ1IjoiaHNpbWFvIiwiYSI6ImNrNXh0bm9pcjIyeWYzZW1sNmExczRyN2cifQ.risXt-oAZfeQp0Afix2U7A"
       >
@@ -58,6 +74,18 @@ const Map = ({ classes }) => {
             offsetTop={-37}
           >
             <PinIcon size="40" color="#2196f3" />
+          </Marker>
+        )}
+
+        {/* 草稿座標 Draft Pin */}
+        {state.draft && (
+          <Marker
+            latitude={state.draft.latitude}
+            longitude={state.draft.longitude}
+            offsetLeft={-19}
+            offsetTop={-37}
+          >
+            <PinIcon size="40" color="#4dd0e1" />
           </Marker>
         )}
       </ReactMapGL>
