@@ -5,17 +5,7 @@ import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 
 import Context from "../../context";
-
-const ME_QUERY = `
-  {
-    me {
-      _id
-      name
-      email
-      picture
-    }
-  }
-`;
+import { ME_QUERY } from "../../graphql/queries";
 
 const Login = ({ classes }) => {
   const { dispatch } = useContext(Context);
