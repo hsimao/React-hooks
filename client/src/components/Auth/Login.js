@@ -26,9 +26,8 @@ const Login = ({ classes }) => {
       headers: { authorization: idToken }
     });
 
-    const data = await client.request(ME_QUERY);
-    console.log({ data });
-    dispatch({ type: "LOGIN_USER", payload: data.me });
+    const { me } = await client.request(ME_QUERY);
+    dispatch({ type: "LOGIN_USER", payload: me });
   };
   return (
     <GoogleLogin
