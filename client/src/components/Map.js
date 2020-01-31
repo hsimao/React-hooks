@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import ReactMapGL, { NavigationControl, Marker } from "react-map-gl";
 import { withStyles } from "@material-ui/core/styles";
+import differenceInMinutes from "date-fns/difference_in_minutes";
 import PinIcon from "./PinIcon";
 import Blog from "./Blog";
 import Context from "../context";
@@ -61,6 +62,13 @@ const Map = ({ classes }) => {
     });
   };
 
+  // 如果是在 30 分鐘前新增的就使用不同顏色 icon
+  const highlightNewPin = pin => {
+    const isNewPin =
+      differenceInMinutes(Date.now(), new Date(pin.createdAt)) <= 30;
+    return isNewPin ? "#00bcd4" : "#2196f3";
+  };
+
   return (
     <div className={classes.root}>
       <ReactMapGL
@@ -112,7 +120,7 @@ const Map = ({ classes }) => {
             offsetLeft={-19}
             offsetTop={-37}
           >
-            <PinIcon size="40" color="#2196f3" />
+            <PinIcon size="40" color={highlightNewPin(pin)} />
           </Marker>
         ))}
       </ReactMapGL>
