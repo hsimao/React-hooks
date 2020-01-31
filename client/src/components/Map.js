@@ -87,7 +87,7 @@ const Map = ({ classes }) => {
             offsetLeft={-19}
             offsetTop={-37}
           >
-            <PinIcon size="40" color="#2196f3" />
+            <PinIcon size="40" color="#8d6e63" />
           </Marker>
         )}
 
@@ -99,7 +99,7 @@ const Map = ({ classes }) => {
             offsetLeft={-19}
             offsetTop={-37}
           >
-            <PinIcon size="40" color="#8d6e63" />
+            <PinIcon size="40" color="#90caf9" />
           </Marker>
         )}
 
@@ -112,7 +112,7 @@ const Map = ({ classes }) => {
             offsetLeft={-19}
             offsetTop={-37}
           >
-            <PinIcon size="40" color="#26a69a" />
+            <PinIcon size="40" color="#2196f3" />
           </Marker>
         ))}
       </ReactMapGL>

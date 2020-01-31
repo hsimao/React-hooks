@@ -43,6 +43,7 @@ const CreatePin = ({ classes }) => {
       const pinData = { title, content, image: url, latitude, longitude };
       const { createPin } = await client.request(CREATE_PIN_MUTATION, pinData);
       console.log("Pin created", { createPin });
+      dispatch({ type: "CREATE_PIN", payload: createPin });
       handleDeleteDraft();
     } catch (err) {
       setSubmitting(false);
@@ -63,7 +64,7 @@ const CreatePin = ({ classes }) => {
         className={classes.alignCenter}
         component="h2"
         variant="h4"
-        color="secondary"
+        color="primary"
       >
         <LandscapeIcon className={classes.iconLarge} />
         標記地點

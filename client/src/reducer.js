@@ -39,6 +39,14 @@ export default function reducer(state, { type, payload }) {
         ...state,
         pins: payload
       };
+    case "CREATE_PIN":
+      const newPin = payload;
+      // 重新抓出 pins, 並判斷 id 確保不會重複
+      const prevPins = state.pins.filter(pin => pin._id !== newPin._id);
+      return {
+        ...state,
+        pins: [...prevPins, newPin]
+      };
     default:
       return state;
   }
