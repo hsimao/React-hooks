@@ -20,9 +20,18 @@ const createPin = authenticated(async (root, args, ctx) => {
   return pinAdded;
 });
 
+// 取得所有標籤
+const getPins = async (root, args, ctx) => {
+  const pins = await Pin.find({})
+    .populate("author")
+    .populate("comments.author");
+  return pins;
+};
+
 module.exports = {
   Query: {
-    me: authenticated((root, args, ctx) => ctx.currentUser)
+    me: authenticated((root, args, ctx) => ctx.currentUser),
+    getPins: getPins
   },
   Mutation: {
     createPin: createPin
