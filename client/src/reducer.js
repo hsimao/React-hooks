@@ -62,6 +62,17 @@ export default function reducer(state, { type, payload }) {
         pins: filteredPins,
         currentPin: null
       };
+    case "CREATE_COMMENT":
+      const updatedCurrentPin = payload;
+      // 找到當前有更新留言的 pin 並替換
+      const updatedPins = state.pins.map(pin =>
+        pin._id === updatedCurrentPin._id ? updatedCurrentPin : pin
+      );
+      return {
+        ...state,
+        pins: updatedPins,
+        currentPin: updatedCurrentPin
+      };
     default:
       return state;
   }

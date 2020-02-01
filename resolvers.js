@@ -36,6 +36,19 @@ const deletePin = authenticated(async (root, args, ctx) => {
   return pinDelete;
 });
 
+// 新增留言
+const createComment = authenticated(async (root, args, ctx) => {
+  const newComment = { text: args.text, author: ctx.currentUser._id };
+  const pinUpdated = await Pin.findOneAndUpdate(
+    { _id: args.pinId },
+    { $push: { comments: newComment } },
+    { new: true }
+  )
+    .populate("author")
+    .populate("comments.author");
+  return pinUpdated;
+});
+
 module.exports = {
   Query: {
     me: authenticated((root, args, ctx) => ctx.currentUser),
@@ -43,6 +56,7 @@ module.exports = {
   },
   Mutation: {
     createPin: createPin,
-    deletePin: deletePin
+    deletePin: deletePin,
+    createComment: createComment
   }
 };
