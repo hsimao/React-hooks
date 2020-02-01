@@ -1,5 +1,10 @@
-const { AuthenticationError } = require("apollo-server");
+const { AuthenticationError, PubSub } = require("apollo-server");
 const Pin = require("./models/Pin");
+
+const pubsub = new PubSub();
+const PIN_ADDED = "PIN_ADDED";
+const PIN_DELETED = "PIN_DELETED";
+const PIN_UPDATED = "PIN_UPDATED";
 
 // 封裝高階函式 authenticated 每次使用 graphql 查詢用戶時, 先判斷是否有 currentUser (在 server.js 內 new ApolloServer 時調用 controllers 內的 findOrCreateUser 邏輯判斷)
 const authenticated = next => (root, args, ctx, info) => {
@@ -17,6 +22,8 @@ const createPin = authenticated(async (root, args, ctx) => {
   }).save();
 
   const pinAdded = await Pin.populate(newPin, "author");
+
+  pubsub.publish(PIN_ADDED, { pinAdded });
   return pinAdded;
 });
 
@@ -33,6 +40,8 @@ const deletePin = authenticated(async (root, args, ctx) => {
   // .exec() 表示執行後回傳 Promise
   // https://stackoverflow.com/questions/31549857/mongoose-what-does-the-exec-function-do
   const pinDelete = await Pin.findOneAndDelete({ _id: args.pinId }).exec();
+
+  pubsub.publish(PIN_DELETED, { pinDelete });
   return pinDelete;
 });
 
@@ -46,6 +55,8 @@ const createComment = authenticated(async (root, args, ctx) => {
   )
     .populate("author")
     .populate("comments.author");
+
+  pubsub.publish(PIN_UPDATED, { pinUpdated });
   return pinUpdated;
 });
 
@@ -58,5 +69,16 @@ module.exports = {
     createPin: createPin,
     deletePin: deletePin,
     createComment: createComment
+  },
+  Subscription: {
+    pinAdded: {
+      subscribe: () => pubsub.asyncIterator(PIN_ADDED)
+    },
+    pinDeleted: {
+      subscribe: () => pubsub.asyncIterator(PIN_DELETED)
+    },
+    pinUpdated: {
+      subscribe: () => pubsub.asyncIterator(PIN_UPDATED)
+    }
   }
 };
