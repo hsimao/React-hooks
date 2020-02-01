@@ -28,12 +28,21 @@ const getPins = async (root, args, ctx) => {
   return pins;
 };
 
+// 刪除標籤
+const deletePin = authenticated(async (root, args, ctx) => {
+  // .exec() 表示執行後回傳 Promise
+  // https://stackoverflow.com/questions/31549857/mongoose-what-does-the-exec-function-do
+  const pinDelete = await Pin.findOneAndDelete({ _id: args.pinId }).exec();
+  return pinDelete;
+});
+
 module.exports = {
   Query: {
     me: authenticated((root, args, ctx) => ctx.currentUser),
     getPins: getPins
   },
   Mutation: {
-    createPin: createPin
+    createPin: createPin,
+    deletePin: deletePin
   }
 };

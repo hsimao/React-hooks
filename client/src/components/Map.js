@@ -7,6 +7,7 @@ import Blog from "./Blog";
 import Context from "../context";
 import { useClient } from "../client";
 import { GET_PINS_QUERY } from "../graphql/queries";
+import { DELETE_PIN_MUTATION } from "../graphql/mutations";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import DeleteIcon from "@material-ui/icons/DeleteTwoTone";
@@ -55,6 +56,7 @@ const Map = ({ classes }) => {
     if (!state.draft) {
       dispatch({ type: "CREATE_DRAFT" });
     }
+    setPopup(null);
     const [longitude, latitude] = lngLat;
     dispatch({
       type: "UPDATE_DRAFT_LOCATION",
@@ -77,6 +79,14 @@ const Map = ({ classes }) => {
   };
 
   const isAuthUser = () => state.currentUser._id === popup.author._id;
+
+  // 刪除標籤
+  const handleDeletePin = async pin => {
+    const variables = { pinId: pin._id };
+    const { deletePin } = await client.request(DELETE_PIN_MUTATION, variables);
+    dispatch({ type: "DELETE_PIN", payload: deletePin });
+    setPopup(null);
+  };
 
   return (
     <div className={classes.root}>
@@ -156,7 +166,7 @@ const Map = ({ classes }) => {
                 {popup.latitude.toFixed(6)},{popup.longitude.toFixed(6)},
               </Typography>
               {isAuthUser() && (
-                <Button>
+                <Button onClick={() => handleDeletePin(popup)}>
                   <DeleteIcon className={classes.deleteIcon} />
                 </Button>
               )}
