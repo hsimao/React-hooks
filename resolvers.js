@@ -39,10 +39,9 @@ const getPins = async (root, args, ctx) => {
 const deletePin = authenticated(async (root, args, ctx) => {
   // .exec() 表示執行後回傳 Promise
   // https://stackoverflow.com/questions/31549857/mongoose-what-does-the-exec-function-do
-  const pinDelete = await Pin.findOneAndDelete({ _id: args.pinId }).exec();
-
-  pubsub.publish(PIN_DELETED, { pinDelete });
-  return pinDelete;
+  const pinDeleted = await Pin.findOneAndDelete({ _id: args.pinId }).exec();
+  pubsub.publish(PIN_DELETED, { pinDeleted });
+  return pinDeleted;
 });
 
 // 新增留言

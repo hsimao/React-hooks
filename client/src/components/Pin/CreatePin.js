@@ -41,9 +41,7 @@ const CreatePin = ({ classes }) => {
       const url = await handleImageUpload();
       const { latitude, longitude } = state.draft;
       const pinData = { title, content, image: url, latitude, longitude };
-      const { createPin } = await client.request(CREATE_PIN_MUTATION, pinData);
-      console.log("Pin created", { createPin });
-      dispatch({ type: "CREATE_PIN", payload: createPin });
+      await client.request(CREATE_PIN_MUTATION, pinData);
       handleDeleteDraft();
     } catch (err) {
       setSubmitting(false);
