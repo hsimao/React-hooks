@@ -3,7 +3,7 @@ import { GraphQLClient } from "graphql-request";
 
 export const BASE_URL =
   process.env.NODE_ENV === "production"
-    ? "http://react-geopins.herokuapp.com/graphql"
+    ? "https://react-geopins.herokuapp.com/graphql"
     : "http://localhost:4000/graphql";
 
 // GraphQL 請求封裝, 預先設定好 url 跟 token
