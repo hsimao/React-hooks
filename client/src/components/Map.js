@@ -95,6 +95,16 @@ const Map = ({ classes }) => {
     setPopup(null);
   };
 
+  // 如果選中當下的標籤被作者刪除, 需要關閉 popup
+  useEffect(() => {
+    const pinExists =
+      popup && state.pins.findIndex(pin => pin._id === popup._id) > -1;
+
+    if (!pinExists) {
+      setPopup(null);
+    }
+  }, [state.pins.length]);
+
   return (
     <div className={mobileSize ? classes.rootMobile : classes.root}>
       <ReactMapGL
