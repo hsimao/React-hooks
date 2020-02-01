@@ -16,8 +16,9 @@ mongoose
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  introspection: true,
-  playground: true,
+  // 可在線上訪問 graphQL 介面 http://react-geopins.herokuapp.com/playground
+  // introspection: true,
+  // playground: true,
   context: async ({ req }) => {
     let authToken = null;
     let currentUser = null;
