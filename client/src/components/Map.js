@@ -75,7 +75,7 @@ const Map = ({ classes }) => {
   const [popup, setPopup] = useState(null);
   const handleSelectPin = pin => {
     setPopup(pin);
-    dispatch({ type: "SET_PIN" });
+    dispatch({ type: "SET_PIN", payload: pin });
   };
 
   const isAuthUser = () => state.currentUser._id === popup.author._id;
