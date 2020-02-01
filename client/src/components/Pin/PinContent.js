@@ -48,9 +48,9 @@ const PinContent = ({ classes }) => {
 
 const styles = theme => ({
   root: {
-    padding: "1em 0.5em",
+    padding: "1em 1.5em",
     textAlign: "center",
-    width: "80%"
+    width: "100%"
   },
   icon: {
     marginLeft: theme.spacing.unit,
