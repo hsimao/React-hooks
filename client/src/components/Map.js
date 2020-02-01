@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import ReactMapGL, { NavigationControl, Marker } from "react-map-gl";
+import ReactMapGL, { NavigationControl, Marker, Popup } from "react-map-gl";
 import { withStyles } from "@material-ui/core/styles";
 import differenceInMinutes from "date-fns/difference_in_minutes";
 import PinIcon from "./PinIcon";
@@ -7,9 +7,9 @@ import Blog from "./Blog";
 import Context from "../context";
 import { useClient } from "../client";
 import { GET_PINS_QUERY } from "../graphql/queries";
-// import Button from "@material-ui/core/Button";
-// import Typography from "@material-ui/core/Typography";
-// import DeleteIcon from "@material-ui/icons/DeleteTwoTone";
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
+import DeleteIcon from "@material-ui/icons/DeleteTwoTone";
 
 const INITIAL_VIEWPORT = {
   latitude: 25.033408,
@@ -20,9 +20,9 @@ const INITIAL_VIEWPORT = {
 const Map = ({ classes }) => {
   const client = useClient();
   const { state, dispatch } = useContext(Context);
+
   const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
   const [userPosition, setUserPosition] = useState(null);
-
   const getUserPosition = () => {
     // 如果瀏覽器有支援 geolocation api, 就使用取得用戶當前座標
     if ("geolocation" in navigator) {
@@ -68,6 +68,15 @@ const Map = ({ classes }) => {
       differenceInMinutes(Date.now(), new Date(pin.createdAt)) <= 30;
     return isNewPin ? "#00bcd4" : "#2196f3";
   };
+
+  // 顯示當前點擊標籤
+  const [popup, setPopup] = useState(null);
+  const handleSelectPin = pin => {
+    setPopup(pin);
+    dispatch({ type: "SET_PIN" });
+  };
+
+  const isAuthUser = () => state.currentUser._id === popup.author._id;
 
   return (
     <div className={classes.root}>
@@ -120,9 +129,40 @@ const Map = ({ classes }) => {
             offsetLeft={-19}
             offsetTop={-37}
           >
-            <PinIcon size="40" color={highlightNewPin(pin)} />
+            <PinIcon
+              onClick={() => handleSelectPin(pin)}
+              size="40"
+              color={highlightNewPin(pin)}
+            />
           </Marker>
         ))}
+
+        {/* 標籤點擊顯示視窗 Popup */}
+        {popup && (
+          <Popup
+            anchor="top"
+            latitude={popup.latitude}
+            longitude={popup.longitude}
+            closeOnClick={false}
+            onClose={() => setPopup(null)}
+          >
+            <img
+              className={classes.popupImage}
+              src={popup.image}
+              alt={popup.title}
+            />
+            <div className={classes.popupTab}>
+              <Typography>
+                {popup.latitude.toFixed(6)},{popup.longitude.toFixed(6)},
+              </Typography>
+              {isAuthUser() && (
+                <Button>
+                  <DeleteIcon className={classes.deleteIcon} />
+                </Button>
+              )}
+            </div>
+          </Popup>
+        )}
       </ReactMapGL>
 
       {/* Blog 區塊, 用來新增 Pin 內容 */}
@@ -146,7 +186,7 @@ const styles = {
     margin: "1em"
   },
   deleteIcon: {
-    color: "red"
+    color: "#ef5350"
   },
   popupImage: {
     padding: "0.4em",
