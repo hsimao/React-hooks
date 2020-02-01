@@ -1,11 +1,43 @@
-import React from "react";
+import React, { useContext } from "react";
 import { withStyles } from "@material-ui/core/styles";
-// import Typography from "@material-ui/core/Typography";
-// import AccessTime from "@material-ui/icons/AccessTime";
-// import Face from "@material-ui/icons/Face";
+import Typography from "@material-ui/core/Typography";
+import AccessTimeIcon from "@material-ui/icons/AccessTime";
+import FaceIcon from "@material-ui/icons/Face";
+import Context from "../../context";
+import format from "date-fns/format";
 
 const PinContent = ({ classes }) => {
-  return <div>PinContent</div>;
+  const { state } = useContext(Context);
+  const { title, content, author, createdAt, comments } = state.currentPin;
+  return (
+    <div className={classes.root}>
+      <Typography component="h2" variant="h4" color="primary" butterBottom>
+        {title}
+      </Typography>
+      <Typography
+        className={classes.text}
+        component="h3"
+        variant="h6"
+        color="inherit"
+        butterBottom
+      >
+        <FaceIcon className={classes.icon} />
+        {author.name}
+      </Typography>
+      <Typography
+        className={classes.text}
+        variant="subtitle2"
+        color="inherit"
+        gutterBottom
+      >
+        <AccessTimeIcon className={classes.icon} />
+        {format(createdAt, "YYYY/MM/DD")}
+      </Typography>
+      <Typography variant="subtitle1" gutterBottom className={classes.content}>
+        {content}
+      </Typography>
+    </div>
+  );
 };
 
 const styles = theme => ({
@@ -22,6 +54,13 @@ const styles = theme => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center"
+  },
+  content: {
+    textAlign: "left",
+    maxWidth: "80%",
+    borderTop: "solid 1px gray",
+    margin: "16px auto 0 auto",
+    padding: "16px 0"
   }
 });
 
